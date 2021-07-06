@@ -40,7 +40,7 @@ module.exports = {
     {
       cards: [
         {
-          name: "network",
+          name: "Network",
           image: "network.svg"
         },
         {
