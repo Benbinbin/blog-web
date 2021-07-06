@@ -89,7 +89,7 @@ module.exports = {
     __BASE__: "/blog-web/",
     __HOME_PAGE_TITLE__: "WEB",
     __HOME_PAGE_ICON__: "home_icon.svg",
-    __HOME_DESCRIPTION__: "这是我的<a href='https://benbinbin.github.io/tech-blog/' target='_blank' class='hover:text-blue-600 underline font-bold transition-colors'>技术部落格</a>之一，主要内容是我在学习前后端开发过程中做的笔记。",
+    __HOME_DESCRIPTION__: "这是我的<a href='https://benbinbin.github.io/tech-blog/' target='_blank' class='hover:text-blue-600 underline font-bold transition-colors'>技术部落格</a>之一，主要内容是与前后端开发相关的笔记。",
     __HOME_PAGE_COLOR__: '#60A5FA',
     __AVATAR__: 'avatar.png',
     __CLASSIFICATIONS__: ['All', 'Network', 'Frontend', 'Backend', 'Project'],
