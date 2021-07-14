@@ -10,30 +10,30 @@ module.exports = {
     ['link', { rel: 'icon', href: '/blog-web/images/favicon.ico' }],
     ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.13.5/dist/katex.min.css' }],
   ],
-  // bundler: '@vuepress/vite',
-  // bundlerConfig: {
-  //   viteOptions: {
-  //     css: {
-  //       postcss: {
-  //         plugins: [
-  //           require('tailwindcss'),
-  //           require('autoprefixer')
-  //         ]
-  //       }
-  //     },
-  //   }
-  // },
-  bundler: '@vuepress/webpack',
+  bundler: '@vuepress/vite',
   bundlerConfig: {
-    postcss: {
-      postcssOptions: {
-        plugins: {
-          tailwindcss: {},
-          autoprefixer: {},
-        },
+    viteOptions: {
+      css: {
+        postcss: {
+          plugins: [
+            require('tailwindcss'),
+            require('autoprefixer')
+          ]
+        }
       },
-    },
+    }
   },
+  // bundler: '@vuepress/webpack',
+  // bundlerConfig: {
+  //   postcss: {
+  //     postcssOptions: {
+  //       plugins: {
+  //         tailwindcss: {},
+  //         autoprefixer: {},
+  //       },
+  //     },
+  //   },
+  // },
   plugins: [
     require('./plugins/addTime.js'),
     [require('./plugins/createHomePage.js'),
