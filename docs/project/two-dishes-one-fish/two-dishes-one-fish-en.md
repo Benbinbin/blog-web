@@ -274,7 +274,25 @@ the following picture is a sample article with a Markdown document listing commo
 ![image title](./images/img1.png)
 ```
 
+:bulb: you can use `<iframe>` tag to insert a video, and adjust the inline style parameter `width` and `aspect-ratio` to change the size of video.
 
+the following code insert a Youtube [video](https://www.youtube.com/watch?v=Y50_RSWpWkA)
+
+```html
+<iframe
+  style="width: 100%; aspect-ratio: 16/9;"
+  src="https://www.youtube.com/embed/Y50_RSWpWkA?start=3403&end=3441&modestbranding=1&rel=0"
+  allowfullscreen>
+</iframe>
+```
+
+you can refer to the [documentation](https://developers.google.com/youtube/player_parameters) about YouTube embedded payers and pPlayer parameters
+
+* `start` parameter set the seconds when the player should start playing the video
+* `end` parameter set the seconds when the player should stop playing the video
+* `modestbranding` set parameter value to 1 to prevent the YouTube logo from displaying in the control bar
+* `rel` set parameter value to 0, when stop playing the video the it will show the related videos from the same channel
+* `allowfullscreen` parameter allow full screen mode to play the video
 
 ### Frontmatter
 
