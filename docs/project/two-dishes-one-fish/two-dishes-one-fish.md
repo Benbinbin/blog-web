@@ -386,29 +386,40 @@ module.exports = {
 <iframe
   style="width: 100%; aspect-ratio: 16/9;"
   src="https://www.youtube.com/embed/Y50_RSWpWkA?start=3403&end=3441&modestbranding=1&rel=0"
-  allowfullscreen>
+  allowfullscreen
+  loading="lazy">
 </iframe>
 ```
 
 更多关于 YouTube 嵌入式播放器及播放器参数可以参考[官方文档](https://developers.google.com/youtube/player_parameters)
 
-* `start` 参数设置播放的开始时间
-* `end` 参数设置播放的结束时间
+* `start` 参数设置播放的开始时间，单位为秒
+* `end` 参数设置播放的结束时间，单位为秒
 * `modestbranding` 参数设置为 1 可以阻止 YouTube 徽标显示在控制栏中
 * `rel` 参数设置为 0 在播放结束显示的相关视频来自于相同的频道
 * `allowfullscreen` 属性允许播放器全屏显示
+* `loading` 属性设置为 `lazy` 可以实现[懒加载](http://www.deathghost.cn/article/html/80)
 
 通过以下代码嵌入一个 Bilibili [视频](https://www.bilibili.com/video/BV1W64y1X7ok)
 
 ```html
 <iframe
   style="width: 100%;aspect-ratio: 16/9;"
-  src="//player.bilibili.com/player.html?aid=759111032&bvid=BV1W64y1X7ok&cid=366423332&page=1&high_quality=1"
-  allowfullscreen="true">
+  src="//player.bilibili.com/player.html?aid=759111032&bvid=BV1W64y1X7ok&cid=366423332&page=1&high_quality=1&t=60"
+  allowfullscreen="true"
+  loading="lazy">
 </iframe>
 ```
 
-其中最后添加的参数 `high_quality=1` 是为了[将视频设置为片源可用的最高清晰度](https://www.zhihu.com/question/363423550/answer/1357554124)
+由于 Bilibili 官方未给出关于嵌入式播放器的参数，参考相关文章尝试进行以下设置
+
+* `high_quality` 参数设置为 `1` 是为了[将视频设置为片源可用的最高清晰度](https://www.zhihu.com/question/363423550/answer/1357554124)
+* `src` 属性里面有很多参数，可以只保留 `bvid` 这个参数
+* `page` 参数指定选集里第几个视频
+* `t` 参数设置视频开始播放的时间，单位为秒
+* `loading` 属性设置为 `lazy` 可以实现懒加载
+
+更多可能的参数设置可以参考 [Bilibili 视频适应页面宽度](https://sunete.github.io/tutorial/bilibili-video-adapts-to-the-width/) 这一篇文章。
 
 #### Frontmatter
 
@@ -868,7 +879,7 @@ module.exports = {
     ```js
     import { defineClientAppEnhance } from '@vuepress/client'
     import CustomLayout from './CustomLayout.vue'
-
+    
     export default defineClientAppEnhance(({ app }) => {
       app.component('CustomLayout', CustomLayout)
     })

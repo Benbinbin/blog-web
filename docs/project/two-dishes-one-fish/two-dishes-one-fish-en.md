@@ -293,6 +293,7 @@ you can refer to the [documentation](https://developers.google.com/youtube/playe
 * `modestbranding` set parameter value to 1 to prevent the YouTube logo from displaying in the control bar
 * `rel` set parameter value to 0, when stop playing the video the it will show the related videos from the same channel
 * `allowfullscreen` parameter allow full screen mode to play the video
+* `loading` set option value to `lazy` to [load the video resource when it need](https://en.wikipedia.org/wiki/Lazy_loading)
 
 ### Frontmatter
 
