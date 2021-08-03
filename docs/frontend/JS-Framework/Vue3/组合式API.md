@@ -1,3 +1,8 @@
+---
+show: true
+collection: Vue 3
+collectionOrder: 4
+---
 # 组合式 API
 
 Vue 通过组件可以实现代码重用，但是由于组件基于各种选项，如 `data`、`computed`、`methods`、`watch` 等，使得同一个功能的逻辑分离四散，这种碎片化使得理解和维护复杂组件变得困难，因为在处理单个逻辑关注点时，不得不在相关代码的选项块之间不断「跳转」。
@@ -25,7 +30,7 @@ Vue 3 新增了一个组件选项 `setup`，它是一个函数，在其中可以
 
 * `props` 一个对象，包含从父级传递进来的**响应式数据**，因此当传入的 prop 更新时，它将被更新。
 
-  所有在子组件中声明了的 prop，不管父组件是否向其传递了，都将出现在 `props` 对象中。其中未被传入的可选的 prop 的值会是 `undefined` 
+  所有在子组件中声明了的 prop，不管父组件是否向其传递了，都将出现在 `props` 对象中。其中未被传入的可选的 prop 的值会是 `undefined`
 
   :bulb: `props` 对象中的 property 可以在模板中直接访问
 
@@ -40,7 +45,7 @@ Vue 3 新增了一个组件选项 `setup`，它是一个函数，在其中可以
   * `emit` 是一个方法，可以调用该方法手动触发一个自定义事件
 
   :bulb: 由于`attrs` 和 `slots` 是**非**响应式的。如果打算根据 `attrs` 或 `slots` 更改应用副作用（响应它们的变化执行相应的操作），那么应该在 `onUpdated` 生命周期钩子中执行此操作。
-  
+
   :warning: `attrs` 和 `slots` 是有状态的对象，它们是会随**组件本身**的更新而更新，因此应该**避免**对它们本身进行**解构**，并始终以 `attrs.x` 或 `slots.x` 的方式引用它们的属性
 
 ```js
@@ -82,7 +87,7 @@ Vue 3 提供 `ref()` 和 `reactive()` 两个函数来手动为数据添加响应
 :bulb: ==在 `setup` 选项最后 `return` 返回的对象中 Vue 会判断变量是否为 ref 对象，如果是就会自动[浅**解包 unwrap**](https://v3.cn.vuejs.org/guide/reactivity-fundamentals.html#ref-%E8%A7%A3%E5%8C%85)，因此在模板或其他选项中**不**需要通过属性 `value` 读取变量的值，直接使用变量即可（但是如果要访问 ref 对象中嵌套的值时，仍需要在模板中添加 `.value`，例如 `nested.count.value`）==
 
 ```vue
-<template> 
+<template>
   <div>
     <p>{{ counter }}</p>
     <button @click="addCounter">Add</button>
@@ -114,7 +119,7 @@ export default {
   }
   methods: {
     resetCouter() {
-        this.counter = 0; 
+        this.counter = 0;
     }
   }
 };
@@ -263,7 +268,7 @@ console.log(map.get('count').value)
 
 #### toRefs
 
-**函数 `toRefs(obj)`** 将为传入的对象的每个属性值包裹一个 ref 对象，这样对象解构后属性值（通过引用方式）分配给的每个变量，这些变量依然都指向源对象的属性，依然保持了数据的响应性。 
+**函数 `toRefs(obj)`** 将为传入的对象的每个属性值包裹一个 ref 对象，这样对象解构后属性值（通过引用方式）分配给的每个变量，这些变量依然都指向源对象的属性，依然保持了数据的响应性。
 
 :warning: 一般传入 `reactive` 函数返回的 proxy 对象，以便在 `setup` 选项最后以解构的形式抛出对象的属性，方便在模板中调用。==如果[传入 `toRefs` 函数的是普通的对象](https://codepen.io/benbinbin/pen/rNmKQvb)，即数据原来就**不具有响应性**，那么最后解构得到的变量也不会是响应式的（更改变量的值后，页面模板的数据不会相应地更新）。==
 
@@ -362,9 +367,9 @@ watch(
 numbers.push(5) // logs: [1,2,3,4,5] [1,2,3,4]
 
 // 深度监听
-const state = reactive({ 
+const state = reactive({
   id: 1,
-  attributes: { 
+  attributes: {
     name: '',
   }
 })
@@ -530,7 +535,7 @@ export default {
 
     provide('location', location)
     provide('geolocation', geolocation)
-      
+
     return {
       location
     }
@@ -617,7 +622,7 @@ setup() {
 * 然后就可以**在 `onMounted` 钩子的回调函数中**，即组件挂载后，通过这个响应式变量访问到相应的 DOM 节点
 
 ```html
-<template> 
+<template>
   <div ref="root">This is a root element</div>
 </template>
 
@@ -689,7 +694,7 @@ setup() {
 
       watchEffect(() => {
         console.log(root.value) // => <div>This is a root element</div>
-      }, 
+      },
       {
         flush: 'post'
       })
@@ -724,14 +729,14 @@ export default function useUserRepositories(user) {
     const addCounter = () => {
       counter.value++;
     };
-    
+
     return { counter, addCounter };
   }
 }
 ```
 
 ```vue
-<template> 
+<template>
   <div>
     <p>{{ counter }}</p>
     <button @click="addCounter">Add</button>
@@ -742,12 +747,12 @@ export default function useUserRepositories(user) {
 // src/components/UserRepositories.vue
 import useCounter from '@/composables/useCounter'
 import { ref } from "vue";
-    
+
 export default {
   setup(props) {
     const num = 0;
     const { counter, addCounter } =  useCounter;
-    
+
     return { counter, addCounter };
   }
 };
