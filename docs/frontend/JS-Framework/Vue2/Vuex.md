@@ -59,7 +59,7 @@ const store = new Vuex.Store({
 })
 ```
 
-:clapper: 为了在 Vue 组件中访问 `this.$store` property，需要为 Vue 实例提供创建好的 `store`。Vuex 提供了一个从根组件向所有子组件，以选项 `store` 的方式「注入」该 store 的机制：
+:clapper: 为了在 Vue 组件中访问 `this.$store` property，需要为 Vue 实例提供创建好的 `store`。:clapper: Vuex 提供了一个从根组件向所有子组件，以选项 `store` 的方式「注入」该 store 的机制：
 
 ```js
 new Vue({
@@ -141,7 +141,7 @@ computed: {
 
 <iframe style="width: 100%; aspect-ratio: 16/9;" src="https://www.youtube.com/embed/J67zuowW_ok?start=4111&end=4970&modestbranding=1&rel=0" allowfullscreen loading="lazy"></iframe>
 
-:clapper: Getter 函数接受的第一个参数是 **`state` 对象**，（可选）接受 `getters` 作为第二个参数，它是一个包含其他 Getter 的对象，最后**返回一个值或一个函数**。
+:clapper: Getter 函数接受的第一个参数是 `state` 对象，（可选）接受 `getters` 作为第二个参数，它是一个包含其他 Getter 的对象，最后返回一个值或一个函数。
 
 ```js
 const store = new Vuex.Store({
@@ -319,7 +319,7 @@ const store = new Vuex.Store({
 
 <iframe style="width: 100%; aspect-ratio: 16/9;" src="https://www.youtube.com/embed/KS3gA56-LFY?start=3713&end=4001&modestbranding=1&rel=0" allowfullscreen loading="lazy"></iframe>
 
-:bulb: Action 中通常存在异步操作，因此**在组件中分发 action 时 Vuex 默认返回一个 Promise**，如果在 action handler 回调函数也返回 Promise `return new Promiser((resolve, reject) => {})`，这样便可以**在组件中监听回调函数的 Promise 执行情况**，进行后续继续执行相应操作：
+:bulb: Action 中通常存在异步操作，:clapper: 因此**在组件中分发 action 时 Vuex 默认返回一个 Promise**，如果在 action handler 回调函数也返回 Promise `return new Promiser((resolve, reject) => {})`，这样便可以**在组件中监听回调函数的 Promise 执行情况**，进行后续继续执行相应操作：
 
 ```js
 const store = new Vuex.Store({
@@ -383,7 +383,7 @@ export default {
 
 Vuex 允许我们将 store 分割成模块 module，每个模块拥有自己的 `state`、`mutations`、`actions`、`getters`，也支持嵌套子模块。
 
-:clapper: 在 store 的选项 `modules` 中注册模块
+在 store 的选项 `modules` 中注册模块
 
 ```js
 const moduleA = {
