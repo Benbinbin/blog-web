@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="426px" height="345px" viewBox="0 0 426 345" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>threepillars</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" stroke="#979797" fill="#4285F4" x="43.5" y="32.5" width="74" height="211"></rect>
+        <rect id="Rectangle-Copy-4" stroke="#979797" fill="#FBBC04" x="175.5" y="32.5" width="74" height="211"></rect>
+        <rect id="Rectangle" stroke="#979797" fill="#4285F4" x="36.5" y="244.5" width="87" height="15"></rect>
+        <rect id="Rectangle-Copy-5" stroke="#979797" fill="#FBBC04" x="168.5" y="244.5" width="87" height="15"></rect>
+        <rect id="Rectangle-Copy-2" stroke="#979797" fill="#4285F4" x="36.5" y="16.5" width="87" height="15"></rect>
+        <rect id="Rectangle-Copy-6" stroke="#979797" fill="#FBBC04" x="168.5" y="16.5" width="87" height="15"></rect>
+        <rect id="Rectangle-Copy" stroke="#979797" fill="#4285F4" x="32.5" y="260.5" width="96" height="15"></rect>
+        <rect id="Rectangle-Copy-7" stroke="#979797" fill="#FBBC04" x="164.5" y="260.5" width="96" height="15"></rect>
+        <rect id="Rectangle-Copy-3" stroke="#979797" fill="#4285F4" x="32.5" y="0.5" width="96" height="15"></rect>
+        <rect id="Rectangle-Copy-8" stroke="#979797" fill="#FBBC04" x="164.5" y="0.5" width="96" height="15"></rect>
+        <rect id="Rectangle-Copy-13" stroke="#979797" fill="#34A853" x="307.5" y="32.5" width="74" height="211"></rect>
+        <rect id="Rectangle" stroke="#979797" fill="#137333" x="0.5" y="276.5" width="425" height="35"></rect>
+        <rect id="Rectangle-Copy-14" stroke="#979797" fill="#B31412" x="0.5" y="309.5" width="425" height="35"></rect>
+        <rect id="Rectangle-Copy-12" stroke="#979797" fill="#34A853" x="300.5" y="244.5" width="87" height="15"></rect>
+        <rect id="Rectangle-Copy-11" stroke="#979797" fill="#34A853" x="300.5" y="16.5" width="87" height="15"></rect>
+        <rect id="Rectangle-Copy-10" stroke="#979797" fill="#34A853" x="296.5" y="260.5" width="96" height="15"></rect>
+        <rect id="Rectangle-Copy-9" stroke="#979797" fill="#34A853" x="296.5" y="0.5" width="96" height="15"></rect>
+        <text id="Capabilities" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#FFFFFF">
+            <tspan x="178" y="331">Capabilities</tspan>
+        </text>
+        <text id="Privacy" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#FFFFFF">
+            <tspan x="61.0107422" y="135">Privacy</tspan>
+        </text>
+        <text id="Security" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#FFFFFF">
+            <tspan x="190.763672" y="135">Security</tspan>
+        </text>
+        <text id="Performance" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#FFFFFF">
+            <tspan x="309.291016" y="135">Performance</tspan>
+        </text>
+        <text id="Webbiness" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#FFFFFF">
+            <tspan x="178" y="298">Webbiness</tspan>
+        </text>
+    </g>
+</svg>

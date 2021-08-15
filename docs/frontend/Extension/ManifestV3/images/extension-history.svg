@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="574px" height="119px" viewBox="0 0 574 119" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>pastpresentfuture</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Rectangle" fill="#FBBC04" points="0 38 156.996204 38 191 78.5 156.996204 119 0 119 29.9881189 78.5"></polygon>
+        <polygon id="Rectangle-Copy" fill="#4285F4" points="191 38 348.818174 38 383 78.5 348.818174 119 191 119 221.145125 78.5"></polygon>
+        <polygon id="Rectangle-Copy-2" fill="#EA4335" points="383 38 539.996204 38 574 78.5 539.996204 119 383 119 412.988119 78.5"></polygon>
+        <text id="Previous-Browser-Ext" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#5F6368">
+            <tspan x="34.4980469" y="11">Previous Browser</tspan>
+            <tspan x="35.5175781" y="25">Extension Efforts</tspan>
+        </text>
+        <text id="Chrome-Extension-Pla" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#5F6368">
+            <tspan x="255.727539" y="11">Chrome</tspan>
+            <tspan x="225.387695" y="25">Extension Platform</tspan>
+        </text>
+        <text id="Future-of-the-Extens" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#5F6368">
+            <tspan x="431.470703" y="11">Future of the</tspan>
+            <tspan x="414.387695" y="25">Extension Platform</tspan>
+        </text>
+        <text id="Basic-Extensibility" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#FFFFFF">
+            <tspan x="43" y="83">Basic Extensibility</tspan>
+        </text>
+        <text id="Fundamentally-Secure" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#FFFFFF">
+            <tspan x="233" y="76">Fundamentally Secure;</tspan>
+            <tspan x="233" y="90">Based on Web</tspan>
+        </text>
+        <text id="Enhance-security,-pr" font-family="Roboto-Bold, Roboto" font-size="12" font-weight="bold" fill="#FFFFFF">
+            <tspan x="424" y="69">Enhance security,</tspan>
+            <tspan x="424" y="83">privacy, performance</tspan>
+            <tspan x="424" y="97">Still capable &amp; webby</tspan>
+        </text>
+    </g>
+</svg>
