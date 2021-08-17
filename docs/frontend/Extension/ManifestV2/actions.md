@@ -1,6 +1,6 @@
 ---
 show: true
-cover: Chrome.png
+cover: Chrome-manifestV2.png
 collection: browser extension
 collectionOrder: 4
 summary: browser actions 和 page actions 可以在浏览器上添加图标，以提供用户交互。

@@ -1,6 +1,6 @@
 ---
 show: true
-cover: Chrome.png
+cover: Chrome-manifestV2.png
 collection: browser extension
 collectionOrder: 5
 summary: content scripts 是在页面加载后运行的 JavaScript 文档（或 CSS 样式表），它可以操作页面的 DOM。

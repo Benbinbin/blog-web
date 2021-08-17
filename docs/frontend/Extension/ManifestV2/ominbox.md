@@ -1,6 +1,6 @@
 ---
 show: true
-cover: Chrome.png
+cover: Chrome-manifestV2.png
 collection: browser extension
 collectionOrder: 6
 summary: omnibox 多功能框实际是指浏览器的地址栏，让用户在地址栏输入该关键字时并按 Tab 键触发插件的相应 actions，如提供搜索建议。
