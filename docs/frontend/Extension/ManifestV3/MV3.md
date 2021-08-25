@@ -1,5 +1,5 @@
 ---
-`show: true
+show: true
 cover: Chrome-manifestV3.png
 collection: browser extension V3
 collectionOrder: 4
