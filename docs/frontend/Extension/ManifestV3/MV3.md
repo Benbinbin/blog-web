@@ -2,7 +2,7 @@
 show: true
 cover: Chrome-manifestV3.png
 collection: browser extension V3
-collectionOrder: 4
+collectionOrder: 3
 summary: 浏览器扩展程序配置清单版本 3 相关介绍
 tag:
   - browser extension
