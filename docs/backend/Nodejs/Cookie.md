@@ -9,7 +9,7 @@ tags:
 
 # Cookie
 ## 浏览器读取与写入
-参考：[Cookie.md](D:/Frontend/JavaScript/操作浏览器/Cookie.md)
+参考：[Cookie.md](../../frontend/JavaScript/操作浏览器/Cookie.md)
 
 ## 服务器端读取与写入
 ### 使用 Node.js
@@ -63,14 +63,14 @@ req.cookies.yourCookieName;
 
 
     Express 写入 cookie 并设置[相关参数](http://expressjs.com/en/5x/api.html#res.cookie)
-
+    
     ```js
     var cookieParser = require('cookie-parser');
     // ...
     app.use(cookieParser());
     res.cookie(name, value, [, options]);
     ```
-
+    
     常用参数 option 设置：
     * `maxAge` Cookie 的有效期，以毫秒计算
     * `httpOnly` 仅可以通过 http 传输，布尔值

@@ -126,7 +126,7 @@ export default {
 </script>
 ```
 
-:hammer: 以上[示例](https://codepen.io/benbinbin/pen/eYWKLXB)点击按钮后，控制台输出
+:hammer: 以上[示例](https://codepen.io/benbinbin/pen/eYWKLXB)点击 `add` 按钮后，控制台输出
 
 ![ref](./images/ref.png)
 
@@ -326,7 +326,7 @@ console.log(count.value) // 0
 
 - 需要侦听的响应式引用或 getter 函数（返回响应式数据）
 - 一个回调函数（在其中执行[副作用](https://v3.vuejs.org/guide/reactivity.html#how-vue-knows-what-code-is-running)）
-- 可选的配置选项
+- 一个配置选项对象（可选）
   - `deep` 为了侦听对象或数组内部嵌套值的变化
   - `immediate` 立即以表达式的当前值触发回调
   - `flush` `flush` 选项可以更好地控制回调的时间。它可以设置为 `'pre'`（默认值，在渲染前被调用）、`'post'`（将回调推迟到渲染之后的）或 `'sync'`（同步进行）。
@@ -517,7 +517,7 @@ export default {
 }
 ```
 
-:bulb: 为了增加 provide 值和 inject 值之间的**响应性**，可以在 provide 值时先使用 `ref` 或 `reactive` 函数进行处理。这样当祖父级数据改变时，接收数据的后代组件也会相应更新。
+:bulb: 为了增加 provide 值和 inject 值之间的**响应性**，可以==在 provide 值时先使用 `ref` 或 `reactive` 函数进行处理==。这样当祖父级数据改变时，接收数据的后代组件也会相应更新。
 
 当使用响应式 provide / inject 值时，建议尽可能将**对响应式 property 的修改限制在定义 provide 的组件内**。
 
@@ -548,7 +548,7 @@ export default {
 }
 ```
 
-如果要确保通过 provide 传递的数据，**不**会被 inject 接受数据的组件更改，建议在 provide 数据时，创建一个只读的 proxy 对象，使用 `readonly` 方法对 proxy 对象进行「保护」。==如果真的需要在注入数据的组件内部更新 inject 的数据，建议通过同时 **provide 一个方法**来负责改变响应式 property，这样可以将数据设定，以及数据的修改的逻辑代码都依然集中放在祖父组件中，便于后续跟踪和维护。==
+如果要确保通过 provide 传递的数据，**不**会被 inject 接受数据的组件更改，建议在 provide 数据时，创建一个只读的 proxy 对象，使用 `readonly` 方法对 proxy 对象进行「保护」。==如果真的需要在注入数据的组件内部更新 inject 的数据，建议同时 provide 一个**方法**来负责改变值，这样可以将数据值的设定和数据修改的逻辑代码，都依然集中放在祖父组件中，便于后续跟踪和维护。==
 
 ```js
 import { provide, reactive, readonly, ref } from 'vue'
@@ -561,14 +561,14 @@ export default {
       latitude: 150
     })
 
-    const resetLocation = () => {
+    const resetGeoLocation = () => {
       geolocation.longitude = 90;
       geolocation.latitude = 135
     }
 
     provide('location', readonly(location))
     provide('geolocation', geolocation)
-    provide('resetGeoLocation', resetLocation)
+    provide('resetGeoLocation', resetGeoLocation)
   }
 }
 ```
@@ -646,6 +646,8 @@ setup() {
 </script>
 ```
 
+:bulb: 如果为使用组件时，为它添加 `ref` 属性，则最后得到的响应式引用是组件的**实例**
+
 :bulb: ==对于 `v-for` 创建的列表节点，如果希望通过在 `v-for` 的单次绑定获取多个 ref（列表），可以**将 `ref` 绑定到一个函数上，默认传递 DOM 作为参数**==，为了保持模板引用的同步性（也是响应式引用），需要在 `onBeforeUpdate` 钩子的回调函数中重置响应式变量。
 
 ```vue
@@ -711,7 +713,7 @@ setup() {
 
 ## 模块化
 
-如果将组件的所有功能都写在 `setup` 选项中，代码量会很大而变得难以维护，可以基于功能将逻辑代码抽离到各个组合式函数中，一般这些函数名以 `use` 作为前缀。
+如果将组件的所有功能都写在 `setup` 选项中，代码量会很大而变得难以维护，可以基于功能将逻辑代码抽离到各个**组合式函数**中，一般这些函数名以 `use` 作为前缀。
 
 将代码划分为独立的各个功能模块，一般是以 `use` 为前缀（与其中的函数同名）的 JavaScript 文件，再在组件中引入使用。
 
@@ -719,7 +721,7 @@ setup() {
 // src/composables/useCounter.js
 import { ref, onMounted } from 'vue'
 
-export default function useUserRepositories(user) {
+export default function useCounter(user) {
     onMounted(() => {
         console.log('mounted')
     })
@@ -750,8 +752,9 @@ import { ref } from "vue";
 
 export default {
   setup(props) {
+    const user = 'Ben';
     const num = 0;
-    const { counter, addCounter } =  useCounter;
+    const { counter, addCounter } =  useCounter(user);
 
     return { counter, addCounter };
   }

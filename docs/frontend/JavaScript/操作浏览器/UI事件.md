@@ -109,8 +109,8 @@ BeforeText...
 
 :bulb: 事件 `mouseenter/mouseleave` 类似于 `mouseover/mouseout`，但关于鼠标在子元素和父元素之间移动时行为会有明显区别
 
-* 事件 `mouseenter/mouseleave` 在元素内部（后代）之间的移动并不会引起事件变化
-* 事件 `mouseenter/mouseleave` 不会冒泡，因此不能使用事件委托监听子元素的相应事件
+* 事件 `mouseenter/mouseleave` 在元素内部（后代）之间的移动并**不**会引起事件变化
+* 事件 `mouseenter/mouseleave` **不**会冒泡，因此不能使用事件委托监听子元素的相应事件
 
 :bulb: 移动事件的对象都具有属性 `relatedTarget`，是 `target` 属性的补充
 

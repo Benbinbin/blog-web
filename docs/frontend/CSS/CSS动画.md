@@ -114,6 +114,12 @@ CSS 动画主要使用三个属性：
 
 使用 CSS 属性 `transition` 为元素的变换设置一种平滑过渡的动画，本质上是在线性时间内将属性从开始值过渡到结束值。
 
+```css
+.selector {
+     transition: <property> <duration> <timing-function> <delay>;
+}
+```
+
 属性 `transition` 是一个简写属性，最多可设置四个与转换相关子属性的属性值：
 
 - `transition-property` 指定需要过渡的 CSS 属性
