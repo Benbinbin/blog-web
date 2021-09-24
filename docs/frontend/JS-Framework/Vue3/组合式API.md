@@ -325,7 +325,20 @@ console.log(count.value) // 0
 `watch` 函数接受 3 个参数：
 
 - 需要侦听的响应式引用或 getter 函数（返回响应式数据）
+
+  :warning: 在子组件中常见的错误是直接监听 `props.propertyName`，正确方式应用是[监听 `props` 对象中的某个属性](https://stackoverflow.com/a/59127059/10699431)（因为 `props` 是经过处理的对象），侦听的对象应该以函数的形式（该函数返回相应的 `props` 属性值）
+
+  ```js
+  watch(
+    () => props.count,
+    (newCount, prevCount) => {
+      /* ... */
+    }
+  )
+  ```
+
 - 一个回调函数（在其中执行[副作用](https://v3.vuejs.org/guide/reactivity.html#how-vue-knows-what-code-is-running)）
+
 - 一个配置选项对象（可选）
   - `deep` 为了侦听对象或数组内部嵌套值的变化
   - `immediate` 立即以表达式的当前值触发回调
