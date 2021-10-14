@@ -19,13 +19,13 @@ Structured Query Language, SQL /ˈsiːkwəl/ 结构化查询语言是用于与�
 * 主键 primary key：表中每行数据的唯一标识，如订单 id，员工 id
 
 ## 常用语句
-sql 脚本由各种语句 clause 构成筛选条件，用以选择特定的数据，主要语句分为两类：
+`.sql` 脚本由各种语句 clause 构成筛选条件，用以选择特定的数据，主要语句分为两类：
 
 * 数据定义语言 Data Definition Language，一般操作表格元信息，用于创建、删除、修改、索引等
     * `CREATE`/`DROP DATABASE` 创建/删除新数据库
     * `ALTER DATABASE` 修改数据库
-    * `CREATE`/ `DROP TABLE` 创建/删除新表
-    * `ALTER TABLE` 变更数据库表
+    * `CREATE`/ `DROP TABLE` 创建/删除表
+    * `ALTER TABLE` 变更表
     * `CREATE`/ `DROP INDEX` 创建/删除索引（搜索键）
 
 * 数据操纵语言 Data Manipulation Language，一般操作表格数据，用于查询、插入、更新、删除数据等
@@ -65,7 +65,7 @@ ALTER DATABASE c03_sqlstudy OWNER TO u1;
 :warning: 不能修改当前激活的数据库元信息，如果需要修改当前数据库要先使用 psql 命令 `\c database_name` 切换到其他数据库
 
 #### CREATE TABLE
-创建表格时需要设置表格的字段（列），并规定每个字段的[数据类型](./Data-Type.md)，字段之间用逗号 `,` 分隔，这些设置使用括号 `()` 内包括。
+创建表格时需要设置表格的字段（列），**并规定每个字段的[数据类型](./Data-Type.md)**，字段之间用逗号 `,` 分隔，这些设置使用括号 `()` 包括。
 
 ```sql
 -- 创建一个表格，表名为 company

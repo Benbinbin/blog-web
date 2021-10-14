@@ -31,6 +31,8 @@ ORDER BY 2 DESC;
 
 :bulb: 函数 `LEFT`、`RIGHT` 等一般针对字符串数据，但是也可以操作数字或日期类型的数据，系统会将它们转换为字符串。
 
+
+
 ## POSTION、STRPOS
 函数 `POSTION` 或 `STRPOS` 用于获取特定（子）字符在字符串中的索引，如 `POSITION(',' IN city_state)` 获取字段（列） `city_state` 每一行字符串中逗号 `,` 的索引位置。
 
