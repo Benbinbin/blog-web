@@ -110,7 +110,7 @@ npm install --save-dev eslint eslint-plugin-vue
 module.exports = {
     // ...
     extends: [
-      'plugin:vue/essential',
+      'plugin:vue/vue3-recommended',
       'airbnb-base',
     ],
     // ...
