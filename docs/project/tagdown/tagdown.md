@@ -339,7 +339,26 @@ export default defineConfig({
   
   ```
 
+:bulb: vite 会通过[依赖预构建](https://cn.vitejs.dev/guide/dep-pre-bundling.html)实现 CommonJS 和 UMD 兼容性，但并不能解决所有问题，在项目中使用 **[webdav-client](https://github.com/perry-mitchell/webdav-client)** 模块就遇到编译问题，因此引入一个 rollup 插件 [@rollup/plugin-commonjs](https://github.com/rollup/plugins/tree/master/packages/commonjs/)，它将 CommonJS 模块转换为 ES6 模块
 
+* 在终端使用以下命令安装模块和相应的依赖包
+
+  ```bash
+  npm install @rollup/plugin-commonjs --save-dev
+  ```
+
+* 在 vite 配置文件 `vite.config.js` 引用插件
+
+  ```js
+  // ...
+  export default defineConfig({
+    // ...
+    plugins: [commonjs(), vue(), crx3()], 
+    // ...
+  })
+  ```
+
+  
 
 
 ## 弹出页面开发
@@ -925,9 +944,245 @@ await importInto(db, file, {
 
 
 
+## 数据同步
+
+在扩展程序中使用 [WebDAV](https://www.bilibili.com/video/BV1up4y1s7VP?p=12) **同步备份** IndexedDB 数据库。可以将书签按组别**同步分享**为 [Gist](https://www.bilibili.com/video/BV1up4y1s7VP?p=10)。
+
+### WebDAV
+
+使用 [webdav-client](https://github.com/perry-mitchell/webdav-client) 库，它是一个 WebDAV 客户端可用于 NodeJS 或浏览器环境。
+
+在终端输入以下命令安装该模块及其相应的依赖
+
+```bash
+npm install webdav --save
+```
+
+然后基于 WebDAV 服务器地址、用户名、密码创建一个客户端实例
+
+```js
+// src/composables/useWebDAV.js
+import { createClient } from 'webdav/web';
+
+// ...
+// create webDAV client
+const createWebDAVClient = (url, username, password) => {
+  const client = createClient(url, {
+    username,
+    password,
+  });
+  return client;
+};
+```
+
+:bulb: 由于扩展程序的域名和需要访问的 WebDAV 服务器域名不同，扩展程序支持跨域访问其他服务器，但需要将服务器地址添加到扩展程序的配置清单 `manifest.json` 的`host_permissions` 属性中，例如使用[坚果云的 WebDAV 服务](https://help.jianguoyun.com/?p=2064)
+
+```json
+{
+  // 省略显示其他部分
+  "host_permissions": [
+    "https://dav.jianguoyun.com/dav/"
+  ],
+  // 省略显示其他部分
+}
+```
+
+以下列出在项目中与 WebDAV 相关的一些主要方法
+
+```js
+// src/composables/useWebDAV.js
+
+// ...
+// 检查 WebDAV 服务器连接状态
+const checkWebDAVConnect = (client) => new Promise((resolve, reject) => {
+  client.stat('/')
+  .then(() => {
+    resolve({
+      state: true,
+      msg: '连接成功',
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+    if (err.response.status === 401) {
+      resolve({
+        state: false,
+        stateCode: 401,
+        msg: '未获得访问权限',
+      });
+    } else {
+      resolve({
+        state: false,
+        stateCode: 404,
+        msg: '连接失败',
+      });
+    }
+  });
+});
+
+// 检查文件夹存在与否，如果不存在就创建一个文件夹
+const checkWebDAVFolder = async (client, folderPath) => {
+  if (await client.exists(folderPath) === false) {
+    await client.createDirectory(folderPath, { recursive: true });
+  }
+};
+
+// 获取文件夹内所有文件
+const getWebDAVFolder = (client, folderPath) => new Promise((resolve, reject) => {
+  client.getDirectoryContents(folderPath)
+    .then((contents) => {
+      resolve(contents);
+    })
+    .catch((err) => {
+      console.log('error', err);
+    });
+});
+
+// 获取文件夹中最后更新的文件
+// 这里是为了获取 WebDAV 的最后备份同步时间
+// 由于访问操作会触发文件夹的更新，所以这里实际上是获取文件夹中最后更新的文件的时间戳
+const getWebDAVLastFileState = async (client, folderPath) => {
+  await checkWebDAVFolder(client, folderPath);
+  const filesArr = await getWebDAVFolder(client, folderPath);
+  if (filesArr.length === 0) return null;
+  // 由于存储的备份文件命名规则是 tagdown_{timestamp}
+  // 所以文件列表最后一个就是最新创建的备份文件
+  const lastFile = filesArr[filesArr.length - 1];
+  return lastFile;
+};
+
+// 获取文件内容
+const getWebDAVFile = (client, filePath, format = 'text') => new Promise((resolve, reject) => {
+  client.getFileContents(filePath, { format })
+    .then((data) => {
+      resolve(data);
+    })
+    .catch((err) => {
+      console.log('error', err);
+    });
+});
+
+// 写入文件内容
+const writeWebDAVFile = async (client, folderPath, fileName, data) => {
+  await checkWebDAVFolder(client, folderPath);
+  const res = await client.putFileContents(`${folderPath}/${fileName}`, data, {
+    contentLength: false,
+  });
+  // console.log(res);
+  if (res) {
+    return {
+      state: true,
+      msg: 'WebDAV 同步成功',
+    };
+  }
+  return {
+    state: false,
+    msg: 'WebDAV 同步失败',
+  };
+};
+```
+
+### Gist
+
+Github 提供了一系列 [RESTful API](https://docs.github.com/en/rest)，其中包括一些[与 Gist 交互的 APIs](https://docs.github.com/en/rest/reference/gists)。 [申请](https://github.com/settings/tokens/new)个人[访问令牌](https://docs.github.com/cn/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)，就可以在扩展程序中管理 Gist，将特定的书签以 gist 代码片段的形式分享到 Github。
+
+:bulb: 由于在引入 [axios](https://www.axios-http.cn/) 模块时出错，所以在扩展程序中使用 `fetch` 向 Github 发送网络请求。
+
+以下列出在项目中与 WebDAV 相关的一些主要方法
+
+```js
+// src/somposables/useGist.js
+
+//...
+// 创建 Gist
+const createGist = (token, gist) => new Promise((resolve, reject) => {
+  fetch('https://api.github.com/gists', {
+    // 使用 POST 方法
+    method: 'POST',
+    // 根据官方文档 https://docs.github.com/en/rest/reference/gists#create-a-gist
+    // 请求体可以设置多种参数，即入参 gist 可以包含以下属性
+    // * descripton 描述 
+    // * files（属性值是一个对象，因为一个 Gist 可以包含多个代码文件片段，该对象中，每一个属性就是一个文件，属性名是文件名，属性值是文件内容）
+    // * public，是否为公开 Gist 或私密 Gist 
+    body: JSON.stringify(gist),
+    // 在请求头添加认证信息
+    headers: new Headers({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }),
+  }).then(async (res) => {
+    if (res.status === 201) {
+      const resData = await res.json();
+      resolve({
+        state: true,
+        msg: '创建成功',
+        data: resData,
+      });
+    } else {
+      console.log('fail', res);
+      resolve({
+        state: false,
+        msg: '创建失败',
+      });
+    }
+  })
+    .catch((err) => {
+      console.error('Error:', err);
+      return {
+        state: false,
+        msg: '创建失败',
+      };
+    });
+});
+
+// 更新 Gist
+const updateGist = async (token, gistId, data) => new Promise((resolve, reject) => {
+  fetch(`https://api.github.com/gists/${gistId}`, {
+    // 使用 PATCH 方法
+    method: 'PATCH',
+    // 根据官方文档 https://docs.github.com/en/rest/reference/gists#update-a-gist
+    // 请求体可以设置多种参数，即入参 data 可以包含以下属性
+    // * gist_id 需要更新的 Gist ID
+    // * desciption 描述
+    // * files 文件 files（属性值是一个对象，因为一个 Gist 可以包含多个代码文件片段，该对象中，每一个属性就是一个文件，属性名是文件名，属性值是文件内容）
+    body: JSON.stringify({
+      ...data,
+    }),
+    headers: new Headers({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }),
+  }).then(async (res) => {
+    if (res.status === 200) {
+      const resData = await res.json();
+      resolve({
+        state: true,
+        msg: '更新成功',
+        data: resData,
+      });
+    } else {
+      console.log('fail', res);
+      resolve({
+        state: false,
+        msg: '更新失败',
+      });
+    }
+  })
+    .catch((err) => {
+      console.error('Error:', err);
+      return {
+        state: false,
+        msg: '更新失败',
+      };
+    });
+});
+```
+
+
+
 ## 后台监控
 
-:warning: 如果希望在后台脚本中 `import` 引入其他库，需要在配置清单 `manifest.json` 中将后台脚本类型声明为模块
+:warning: 如果希望在后台脚本中 `import` 引入其他库，需要在配置清单 `manifest.json` 中将后台脚本类型声明为模块 `module`
 
 ```json
 {
