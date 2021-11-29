@@ -10,7 +10,7 @@ cover: re-vue.jpg
 
 # Vuex
 
-[Vuex](https://vuex.vuejs.org/zh/) 是一个专为 Vue.js 应用程序开发的**状态管理**模式，它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种**可预测**的方式发生变化。
+[Vuex](https://vuex.vuejs.org/zh/) 是一个专为 Vue.js 应用程序开发的**状态管理**模式（插件），它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种**可预测**的方式发生变化。
 
 :clapper: Vuex 的核心概念和工作方式如下图所示
 
@@ -121,11 +121,19 @@ import { mapState } from 'vuex'
 computed: mapState([
   'count'
 ])
-// 计算属性包含从 state 映射得到的属性，还包含组件中的局部计算属性。
-// mapState 函数返回的是一个对象，可以利用对象展开运算符解构 mapState 返回的对象，将它们与组件中的局部计算属性混合
+```
+
+```js
+import { mapState } from 'vuex'
+
+// 如果组件的计算属性包含从 state 映射得到的属性，还包含组件中的局部计算属性
+// mapState 函数返回的是一个对象
+// 可以利用对象展开运算符解构 mapState 返回的对象，将它们与组件中的局部计算属性混合
 computed: {
   localComputed() {...},
-  ...mapState({...})
+  ...mapState({...}),
+  // 数组形式也一样
+  ...mapState([...])
 }
 ```
 
@@ -237,7 +245,7 @@ const store = new Vuex.Store({
       // 变更状态
       state.count = n
     }
-  } 
+  }
 });
 ```
 
@@ -280,7 +288,7 @@ export default {
     ...mapMutations([
       // 将 this.increment() 映射为 this.$store.commit('increment')
       // 调用方法时支持载荷，将 this.increment(amount) 映射为 this.$store.commit('increment', amount)
-      'increment', 
+      'increment',
     ]),
     // 对象形式，可重命名 method
     ...mapMutations({
@@ -319,7 +327,7 @@ const store = new Vuex.Store({
 
 <iframe style="width: 100%; aspect-ratio: 16/9;" src="https://www.youtube.com/embed/KS3gA56-LFY?start=3713&end=4001&modestbranding=1&rel=0" allowfullscreen loading="lazy"></iframe>
 
-:bulb: Action 中通常存在异步操作，:clapper: 因此**在组件中分发 action 时 Vuex 默认返回一个 Promise**，如果在 action handler 回调函数也返回 Promise `return new Promiser((resolve, reject) => {})`，这样便可以**在组件中监听回调函数的 Promise 执行情况**，进行后续继续执行相应操作：
+:bulb: Action 中通常存在异步操作，:clapper: 因此**在组件中分发 action 时 Vuex 默认返回一个 Promise**，但是如果在 action handler 回调函数**显式地返回 Promise `return new Promiser((resolve, reject) => {})`**，这样便可以对异步操作有更多的控制（何时 `resolve` 返回异步操作结果），可以在组件中监听回调函数的 Promise 执行情况，在 `then()` 中执行后续操作（或使用 async-await 结构）：
 
 ```js
 const store = new Vuex.Store({
@@ -365,7 +373,7 @@ export default {
 
       // `mapActions` 也支持载荷：
       // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
-      'incrementBy' 
+      'incrementBy'
     ]),
     // 对象形式
     ...mapActions({
@@ -428,7 +436,7 @@ const moduleA = {
 }
 ```
 
-如果需要在 Gutter 中访问根节点的状态 root state，则是在第三个参数暴露出来
+如果需要在 Getter 中访问根节点的状态 root state，则是在第三个参数暴露出来
 
 ```js
 const moduleA = {
@@ -456,7 +464,7 @@ const moduleA = {
 }
 ```
 
-:bulb: 根状态 `rootState` 其实**包含了加载的模组的局部状态**（因此模组中可以 :clapper:「借助」`rootState` 作为中间者，来访问其他各个注册的模组的局部状态）
+:bulb: 根状态 `rootState` 其实**包含了加载的模组的局部状态**（因此模组中可以 :clapper:「借助」`rootState` 作为中间者，来访问其他各个注册的模组的局部状态，例如通过 `rootState.a` 访问 `a` 模块的局部状态）
 
 <iframe style="width: 100%; aspect-ratio: 16/9;" src="https://www.youtube.com/embed/X1bH3vAej4o?start=1790&end=2385&modestbranding=1&rel=0" allowfullscreen loading="lazy"></iframe>
 
@@ -481,7 +489,7 @@ const moduleA = {
 * `dispatch('moduleName/actionType')`
 * `commit('moduleName/mutationType')`
 
-当如果在模块内部访问 Getter、提交 Mutation、分发 Action 则不需要添加路径「前缀」，这样的设计也更便于模块的迁移和复用。
+当然如果在模块内部访问 Getter、提交 Mutation、分发 Action 则不需要添加路径「前缀」，这样的设计也更便于模块的迁移和复用。
 
 而如果要**在带命名空间的模块内**针对全局空间的 action 或提mutation 进行分发和提交，则相应地需要**将 `{ root: true }` 作为第三参数**传给 `dispatch` 或 `commit`
 
@@ -569,7 +577,7 @@ store.registerModule(['nested', 'myModule'], {
 
 ```js
 store.registerModule('a', module, {
-    preserveState: true 
+    preserveState: true
 });
 ```
 
