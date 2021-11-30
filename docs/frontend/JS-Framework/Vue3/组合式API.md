@@ -17,36 +17,20 @@ Vue 通过组件可以实现代码重用，但是由于组件基于各种选项�
 
 ## setup
 
-Vue 3 新增了一个组件选项 `setup`，它是一个函数，在其中可以调用组合式 API，其返回的所有内容都暴露给组件的其余部分（其他选项，如 `computed`、`methods`、生命周期钩子等等，一般返回的内容供模板使用：
+Vue 3 新增了一个组件选项 `setup`，它是一个函数，在其中可以调用组合式 API，其返回的所有内容都暴露给组件的其余部分（其他选项，如 `computed`、`methods`、生命周期钩子等等），一般返回的内容供模板使用：
 
 * 一些响应式变量，相当于 `data` 选项的作用
 * 一些函数，相当于 `methods` 选项的作用
 
-:bulb: 但不推荐在同一个组件中混合使用选项 API 和组合式 API。
+:bulb: 虽然 Vue 支持混合使用选项 API 和组合式 API，但但不推荐在同一个组件中这样用。
 
 `setup` 函数是在组件创建**之前**（在 `data`、`computed` 或 `methods` 选项被解析之前，比 `beforeCreate` 更早）执行，一旦 `props` 被解析，就将作为组合式 API 的入口。因此在 `setup()`  应该**避免**使用 `this`（因为它找不到组件实例）和访问 `data`、`computed`、`methods` 选项。
 
 `setup(props, context)` 接收两个参数：
 
-* `props` 一个对象，包含从父级传递进来的**响应式数据**，因此当传入的 prop 更新时，它将被更新。
+* `props`
+* `context`
 
-  所有在子组件中声明了的 prop，不管父组件是否向其传递了，都将出现在 `props` 对象中。其中未被传入的可选的 prop 的值会是 `undefined`
-
-  :bulb: `props` 对象中的 property 可以在模板中直接访问
-
-  :warning:因为 `props` 对象是响应式的，所以**不**应该使用 ES6 解构语法去读取其中的属性，因为这可能会导致变量的响应性丢失（如果解构后，变量「接到」的值是基础数据类型，那么变量就会丢失响应性）。
-
-  ==如果真的需要解构 `props`，可先**使用函数 `toRefs(props)`** 将 `props` 对象的每个属性（即每个 prop）包裹为一个 ref 对象，这样 `props` 对象解构后分配给每个变量都指向源对象的属性，依然保持了数据的响应性。==如果一个 prop 是可选的，例如 `title` 是可选的 prop，则调用组件时，可能传入的 `props` 中没有 `title`，在这种情况下，`toRefs` 处理 `props` 对象时，将不会为 `title` 创建一个 ref 对象，此时需要使用 `toRef(props, title)` 来替代，专门为该属性手动显式创建一个 ref 对象作为属性值。
-
-* `context` 一个对象，不是响应式的，可以通过解构来访问暴露组件的三个 property `attrs`、`slots`、`emit`
-
-  * `attrs` 是一个包含了组件所有非 props 的属性的对象
-  * `slots` 是一个包含包含组件通过插槽分发的内容的对象
-  * `emit` 是一个方法，可以调用该方法手动触发一个自定义事件
-
-  :bulb: 由于`attrs` 和 `slots` 是**非**响应式的。如果打算根据 `attrs` 或 `slots` 更改应用副作用（响应它们的变化执行相应的操作），那么应该在 `onUpdated` 生命周期钩子中执行此操作。
-
-  :warning: `attrs` 和 `slots` 是有状态的对象，它们是会随**组件本身**的更新而更新，因此应该**避免**对它们本身进行**解构**，并始终以 `attrs.x` 或 `slots.x` 的方式引用它们的属性
 
 ```js
 export default {
@@ -63,6 +47,28 @@ export default {
   }
 }
 ```
+
+### props
+
+`props` 一个对象，包含从父级传递进来的**响应式数据**，因此当传入的 prop 更新时，它将被更新。
+
+**所有在子组件中声明了的 prop**，不管父组件是否向其传递了，都将出现在 `props` 对象中。其中未被传入的可选的 **prop 的值会是 `undefined`**
+
+:bulb: `props` 对象中的 property 可以在模板中直接访问
+
+:warning: 因为 `props` 对象是响应式的，==所以**不**应该使用 ES6 解构语法去读取其中的属性，因为这可能会**导致变量的响应性丢失**==（如果解构后，变量「接到」的值是基础数据类型，那么变量就会丢失响应性）。
+
+==如果真的需要解构 `props`，可先**使用函数 `toRefs(props)`** 将 `props` 对象的每个属性（即每个 prop）包裹为一个 ref 对象，这样 `props` 对象解构后分配给每个变量都指向源对象的属性，依然保持了数据的响应性==。如果一个 prop 是可选的，例如 `title` 是可选的 prop，则调用组件时，可能传入的 `props` 中没有 `title`，在这种情况下，`toRefs` 处理 `props` 对象时，将不会为 `title` 创建一个 ref 对象，此时需要使用 `toRef(props, title)` 来替代，专门为该属性手动显式创建一个 ref 对象作为属性值。
+
+### context
+
+`context` 一个对象，不是响应式的，可以通过解构来访问组件的三个 property
+
+* `attrs` 是一个包含了组件所有非 props 的属性的对象
+* `slots` 是一个包含组件通过插槽分发的内容的对象
+* `emit` 是一个方法，可以通过调用该方法，手动触发一个自定义事件
+
+:bulb: 由于 `attrs` 和 `slots` 是**非**响应式的。如果打算根据 `attrs` 或 `slots` 更改应用副作用（响应它们的变化执行相应的操作），那么应该在 `onUpdated` 生命周期钩子中访问它们并执行相应的操作。 :warning: 但是由于 `attrs` 和 `slots` 是有状态的对象，它们是会随**组件本身**的更新而更新，==因此应该**避免**对它们本身进行**解构**，并始终以 `attrs.x` 或 `slots.x` 的方式引用它们的属性==
 
 
 
@@ -222,7 +228,7 @@ export default {
 </script>
 ```
 
-:hammer: 以上[示例](https://codepen.io/benbinbin/pen/bGWKmKe)点击按钮后，控制台输出
+:hammer: 以上[示例](https://codepen.io/benbinbin/pen/bGWKmKe)点击按钮后控制台的输出
 
 ![reactive](./images/reactive.png)
 
@@ -260,7 +266,7 @@ console.log(map.get('count').value)
 
 如果解构后，变量「接到」的值是基础数据类型，那么变量就会丢失响应性，由于代理实现的响应性针对的是原对象，这样改变对象的属性值后，页面模板相应的数据也无法更新。而如果使用 `toRefs` 方法，将每个属性都包裹为一个 ref 对象，那么解构后各属性值依然可以保证是通过引用方式传递给各个变量的，这样就可以**维持响应性**，对象的属性值修改后，页面模板的相应数据也响应式地更新。
 
-:hammer: 以上[示例](https://codepen.io/benbinbin/pen/JjNZmzx)点击按钮后，控制台输出，其中 `num` 是 proxy 直接解构得到的变量，`numRef` 是 proxy 经过 `toRefs()` 处理后解构得到的变量。
+:hammer: 以下[示例](https://codepen.io/benbinbin/pen/JjNZmzx)是点击按钮后控制台的输出，其中 `num` 是 proxy 直接解构得到的变量，`numRef` 是 proxy 经过 `toRefs()` 处理后解构得到的变量。
 
 ![reactive toRefs](./images/reactive-toRefs.png)
 
@@ -276,7 +282,7 @@ console.log(map.get('count').value)
 
 **函数 `toRef(obj, propertyName)`** 将给定对象上指定的属性值包裹一个 ref 对象，然后单独「抽出」该属性值（赋值给变量，该变量指向源对象的属性），进行传递时仍可保持数据的响应性。可以将它理解为 `toRefs` 函数的「单数」版本。
 
-:bulb: 与 `toRefs` 函数不同，`toRef` 即使源对象的指定的 property 不存在，也会返回一个可用的 ref。==这使得它在使用可选 prop 时特别有用，而可选 prop 并不会被 `toRefs` 处理。==
+:bulb: 与 `toRefs` 函数不同，`toRef` 即使源对象的指定的 property 不存在，也会返回一个可用的 ref。==这使得它在使用可选 prop 时特别有用，因为[可选 prop 并不会被 `toRefs` 处理](#props)。==
 
 
 
@@ -326,7 +332,7 @@ console.log(count.value) // 0
 
 - 需要侦听的响应式引用或 getter 函数（返回响应式数据）
 
-  :warning: 在子组件中常见的错误是直接监听 `props.propertyName`，正确方式应用是[监听 `props` 对象中的某个属性](https://stackoverflow.com/a/59127059/10699431)（因为 `props` 是经过处理的对象），侦听的对象应该以函数的形式（该函数返回相应的 `props` 属性值）
+  :warning: 在子组件中常见的错误是直接监听 props 对象的某个属性 `props.propertyName`，正确方式应用是[以函数的形式进行侦听，**该函数返回相应的 `props` 属性值**](https://stackoverflow.com/a/59127059/10699431)（直接监听 `props` 对象的属性相当于将其解构，会丢失响应性）
 
   ```js
   watch(
@@ -342,7 +348,7 @@ console.log(count.value) // 0
 - 一个配置选项对象（可选）
   - `deep` 为了侦听对象或数组内部嵌套值的变化
   - `immediate` 立即以表达式的当前值触发回调
-  - `flush` `flush` 选项可以更好地控制回调的时间。它可以设置为 `'pre'`（默认值，在渲染前被调用）、`'post'`（将回调推迟到渲染之后的）或 `'sync'`（同步进行）。
+  - `flush` 选项可以更好地控制回调的时间。它可以设置为 `'pre'`（默认值，在渲染前被调用）、`'post'`（将回调推迟到渲染之后的）或 `'sync'`（同步进行）。
 
 ```js
 import { ref, reactive，watch } from 'vue'
@@ -433,15 +439,15 @@ state.attributes.name = 'Alex' // 日志: "Alex" ""
 const counter = ref(0)
 
 // watch a ref
-const unwatchwatch(counter, (newValue, oldValue) => {
+const unWatch = watch(counter, (newValue, oldValue) => {
   console.log('The new counter value is: ' + counter.value)
 })
 
 // later, teardown the watcher
-unwatch()
+unWatch()
 ```
 
-:bulb: 与 `watchEffect `比较，`watch `允许我们：
+:bulb: 与 `watchEffect` 比较，`watch` 允许我们：
 
 - **惰性**地执行副作用，即默认情况下只有在侦听源发生更改时才执行回调，而 `watchEffect` 必须先执行一次回调以「搜集」依赖。
 - 更具体地说明应触发侦听器重新运行的状态，**显式地声明**需要侦听的响应式引用
@@ -451,7 +457,7 @@ unwatch()
 
 ### watchEffect
 
-为了根据响应式状态变更时执行相应的操作，可以使用 `watchEffect` 方法。它接受传入一个称为副作用的函数，然后就可以在其依赖变更时，自动重新运行该函数。
+为了根据响应式状态变更时执行相应的操作，可以使用 `watchEffect` 方法。它接受传入一个称为副作用的函数，然后就可以**在其依赖变更时，自动重新运行该函数**。
 
 与侦听器 `watch` 不同，由于侦听器 `watchEffect` 直接传入的是一个函数（[副作用](https://v3.vuejs.org/guide/reactivity.html#how-vue-knows-what-code-is-running)，一个函数包裹），**没有**显式地指定要侦听的响应式变量，因此它会先**立即执行**一次传入的函数，以收集和跟踪**响应式追踪其依赖**，相对而言用 `watchEffect` 创建侦听器更简便。
 
@@ -561,7 +567,7 @@ export default {
 }
 ```
 
-如果要确保通过 provide 传递的数据，**不**会被 inject 接受数据的组件更改，建议在 provide 数据时，创建一个只读的 proxy 对象，使用 `readonly` 方法对 proxy 对象进行「保护」。==如果真的需要在注入数据的组件内部更新 inject 的数据，建议同时 provide 一个**方法**来负责改变值，这样可以将数据值的设定和数据修改的逻辑代码，都依然集中放在祖父组件中，便于后续跟踪和维护。==
+如果要确保通过 provide 传递的数据，**不**会被 inject 接受数据的组件更改，建议在 provide 数据时，创建一个只读的 proxy 对象，使用 `readonly` 方法对 proxy 对象进行「保护」。==如果真的需要在注入数据的组件内部更新 inject 的数据，建议同时 provide 一个**方法**来负责改变值，这样可以将数据值的设定和数据修改的逻辑代码都依然集中放在祖父组件中，便于后续跟踪和维护。==
 
 ```js
 import { provide, reactive, readonly, ref } from 'vue'
@@ -579,7 +585,9 @@ export default {
       geolocation.latitude = 135
     }
 
+    // 提供一个只读数据，即在后代组件中只允许获取该数据，而不能对其修改
     provide('location', readonly(location))
+    // 提供一个数据，同时提供修改它的方法
     provide('geolocation', geolocation)
     provide('resetGeoLocation', resetGeoLocation)
   }
@@ -594,8 +602,8 @@ export default {
 
 |    选项式 API     |                   Hook inside `setup`                    |
 | :---------------: | :------------------------------------------------------: |
-|  `beforeCreate`   | Not needed* `setup()` 运行时间就是在 `beforeCreate` 更前 |
-|     `created`     |             Not needed* 使用 `setup()` 代替              |
+|  `beforeCreate`   | （不需要相应的生命周期钩子）`setup()` 运行时间就是在 `beforeCreate` 更前 |
+|     `created`     |             （不需要相应的生命周期钩子）使用 `setup()` 代替              |
 |   `beforeMount`   |                     `onBeforeMount`                      |
 |     `mounted`     |                       `onMounted`                        |
 |  `beforeUpdate`   |                     `onBeforeUpdate`                     |
@@ -632,7 +640,7 @@ setup() {
 
 * 先在 `setup()` 声明一个初始值为 `null` 的 ref 对象，并将相应的响应式变量返回
 * 然后在模板所需引用的节点上设置 `ref` 属性，其值与以上「抛出」的响应式变量名一致
-* 然后就可以**在 `onMounted` 钩子的回调函数中**，即组件挂载后，通过这个响应式变量访问到相应的 DOM 节点
+* 然后就可以**在 `onMounted` 钩子的回调函数中**（即组件挂载后），通过这个响应式变量访问到相应的 DOM 节点
 
 ```html
 <template>
@@ -659,7 +667,7 @@ setup() {
 </script>
 ```
 
-:bulb: 如果为使用组件时，为它添加 `ref` 属性，则最后得到的响应式引用是组件的**实例**
+:bulb: 如果在使用组件时，为组件添加 `ref` 属性，则最后得到的响应式引用是组件的**实例**
 
 :bulb: ==对于 `v-for` 创建的列表节点，如果希望通过在 `v-for` 的单次绑定获取多个 ref（列表），可以**将 `ref` 绑定到一个函数上，默认传递 DOM 作为参数**==，为了保持模板引用的同步性（也是响应式引用），需要在 `onBeforeUpdate` 钩子的回调函数中重置响应式变量。
 
@@ -693,7 +701,7 @@ setup() {
 </script>
 ```
 
-也可以使用 `watch` 或 `watchEffect` 方法来侦听模板引用，但是为了与 DOM 保持同步并引用正确的元素，侦听器应该用 [`flush: 'post'` 选项](https://v3.cn.vuejs.org/api/instance-methods.html#watch)来定义
+可以使用 `watch` 或 `watchEffect` 方法来侦听模板引用，但是为了与 DOM 保持同步并引用正确的元素，侦听器应该用 [`flush: 'post'` 选项](https://v3.cn.vuejs.org/api/instance-methods.html#watch)来定义
 
 ```vue
 <template>
@@ -726,7 +734,7 @@ setup() {
 
 ## 模块化
 
-如果将组件的所有功能都写在 `setup` 选项中，代码量会很大而变得难以维护，可以基于功能将逻辑代码抽离到各个**组合式函数**中，一般这些函数名以 `use` 作为前缀。
+如果将组件的所有功能都写在 `setup` 选项中，代码量会很大而变得难以维护，可以基于功能将逻辑代码抽离到各个**组合式函数**中，这些函数名一般以 `use` 作为前缀。
 
 将代码划分为独立的各个功能模块，一般是以 `use` 为前缀（与其中的函数同名）的 JavaScript 文件，再在组件中引入使用。
 
