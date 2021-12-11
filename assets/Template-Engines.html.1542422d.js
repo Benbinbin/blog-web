@@ -1,0 +1,1 @@
+const e={key:"v-f9df9c28",path:"/backend/Nodejs/Express/Template-Engines.html",title:"Express \u6A21\u677F\u5F15\u64CE",lang:"zh-CN",frontmatter:{createdTime:1625539102e3,updatedTime:1625539102e3,tags:["nodejs","express"]},excerpt:"",headers:[],filePathRelative:"backend/Nodejs/Express/Template-Engines.md",git:{updatedTime:1625539102e3}};export{e as data};

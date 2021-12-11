@@ -1,0 +1,1 @@
+const e={key:"v-05f91e9a",path:"/backend/Nodejs/PM2/Setting.html",title:"PM2 \u5E38\u7528\u914D\u7F6E",lang:"zh-CN",frontmatter:{createdTime:1625539102e3,updatedTime:1625539102e3,title:"PM2 \u5E38\u7528\u914D\u7F6E",tags:["nodejs","pm2"]},excerpt:"",headers:[],filePathRelative:"backend/Nodejs/PM2/Setting.md",git:{updatedTime:1625539102e3}};export{e as data};

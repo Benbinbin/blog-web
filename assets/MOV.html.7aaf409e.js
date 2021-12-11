@@ -1,0 +1,1 @@
+const e={key:"v-46014f76",path:"/frontend/JS-Framework/MOV.html",title:"MOV",lang:"zh-CN",frontmatter:{createdTime:1625539102e3,updatedTime:1625539102e3},excerpt:"",headers:[{level:2,title:"\u6838\u5FC3\u6982\u5FF5",slug:"\u6838\u5FC3\u6982\u5FF5",children:[]}],filePathRelative:"frontend/JS-Framework/MOV.md",git:{updatedTime:1625539102e3}};export{e as data};

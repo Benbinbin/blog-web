@@ -1,0 +1,1 @@
+const e={key:"v-63133288",path:"/backend/Nodejs/Express/Static.html",title:"Express \u9759\u6001\u6587\u4EF6",lang:"zh-CN",frontmatter:{createdTime:1625539102e3,updatedTime:1625539102e3,tags:["nodejs","express"]},excerpt:"",headers:[],filePathRelative:"backend/Nodejs/Express/Static.md",git:{updatedTime:1625539102e3}};export{e as data};

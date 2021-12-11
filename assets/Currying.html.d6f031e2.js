@@ -1,0 +1,1 @@
+const t={key:"v-2cad3170",path:"/frontend/JavaScript/%E8%AF%AD%E6%B3%95%E5%9F%BA%E7%A1%80/Currying.html",title:"Currying",lang:"zh-CN",frontmatter:{createdTime:1625539102e3,updatedTime:1625539102e3},excerpt:"",headers:[],filePathRelative:"frontend/JavaScript/\u8BED\u6CD5\u57FA\u7840/Currying.md",git:{updatedTime:1625539102e3}};export{t as data};
