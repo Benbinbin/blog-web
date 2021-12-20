@@ -64,7 +64,7 @@ module.exports = {
 ```
 
 ## 组件
-为了让 TypeScript 正确推断 Vue 组件选项中的类型，需要使用 `defineComponent` 方法来设置组件的配置参数（原来只需要是一个普通的对象即可）
+为了让 TypeScript 正确推断 Vue 组件选项中的类型，需要使用 Vue helper 函数 `defineComponent` 来设置组件的配置参数（原来只需要是一个普通的对象即可）
 
 ```vue
 <script lang="ts">
