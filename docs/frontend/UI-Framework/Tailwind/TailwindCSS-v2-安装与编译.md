@@ -2,8 +2,8 @@
 show: true
 cover: tailwindcss.png
 collection: TailwindCSS
-collectionOrder: 3
-summary: TailwindCSS 安装与编译
+collectionOrder: 2
+summary: TailwindCSS v2 安装与编译
 tags:
   - CSS
   - TailwindCSS
