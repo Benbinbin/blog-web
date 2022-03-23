@@ -44,7 +44,7 @@ Vuex 的核心概念和工作方式如下图所示，Vuex 中必须遵循一个�
 npm install vuex@next --save
 ```
 
-然后导入 Vuex，并==使用方法 `createStore` 创建路由==
+然后导入 Vuex，并==使用方法 `createStore` 创建仓库实例==
 
 记得**通过 `app.use(store)` 的方式安装 Vuex 插件**（其中 `app` 是 Vue 应用实例，`store` 是仓库实例），将仓库实例从根组件中「注入」到所有的子组件里，然后可以在 Vue 的任意组件中通过 `this.$store` 访问仓库实例。
 
@@ -114,7 +114,7 @@ computed: mapState({
   countAlias: 'count',
   // 使用箭头函数，以 state 作为入参，返回所需的 state 中的一个属性
   count: state => state.count,
-  // 使用常规函数，以 state 作为入参，这样能够同时通过 this 获取当前组件的局部状态（data 属性），返回一个新的混合状态
+  // 使用常规函数，以 state 作为入参，这样能够同时通过 this 获取当前组件的实例，并访问局部状态（即 data 属性），返回一个新的混合状态
   countPlusLocalState(state) {
     return state.count + this.localCount
   }
@@ -252,7 +252,7 @@ const store = new Vuex.Store({
       // 变更状态
       state.count = n
     }
-  } 
+  }
 });
 ```
 
@@ -273,7 +273,7 @@ import { SOME_MUTATION } from './mutation-types' // 引入 mutaiton 名称列表
 const store = createStore({
   state: { ... },
   mutations: {
-    // 使用 ES2015 风格的计算属性命名功能，使用一个常量作为函数名
+    // 使用 ES2015 风格的计算属性命名功能，使用一个变量的值（其值是一个常量）作为函数名
     [SOME_MUTATION] (state) {
       // mutate state
     }
@@ -310,7 +310,7 @@ export default {
     ...mapMutations([
       // 将 this.increment() 映射为 this.$store.commit('increment')
       // 调用方法时支持载荷，将 this.increment(amount) 映射为 this.$store.commit('increment', amount)
-      'increment', 
+      'increment',
     ]),
     // 对象形式，可重命名 method
     ...mapMutations({
@@ -338,7 +338,7 @@ const store = createStore({
       context.commit('INCREMENT', payload)
     },
     decrement ({ commit }, payload) {
-        commit('DECREMENT', payload)
+      commit('DECREMENT', payload)
     }
   }
 });
@@ -374,7 +374,7 @@ store.dispatch('actionA').then(() => {
 this.$store.dispatch('actionType')
 ```
 
-也支持以对象的形式分发 Action 事件
+:bulb: 也支持以对象的形式分发 Action 事件
 
 ```js
 store.dispatch({
@@ -397,7 +397,7 @@ export default {
 
       // `mapActions` 也支持载荷
       // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
-      'incrementBy' 
+      'incrementBy'
     ]),
     // 对象形式，可重命名 method
     ...mapActions({
@@ -482,7 +482,7 @@ Vuex 允许我们将 store 分割成模块 module，每个模块拥有自己的 
 
 ```js
 const moduleA = {
-  state: () => ({ ... }), // 使用函数形式，并返回一个对象
+  state: () => ({ ... }), // 对于模块中的 state，需要使用函数形式，并返回一个对象
   mutations: { ... },
   actions: { ... },
   getters: { ... }
@@ -501,7 +501,7 @@ const store = createStore({
 
 ### 局部状态
 
-在模块中，Mutation 和 Getter 接收的第一个参数是模块里局部状态的对象；对于 Action 局部状态通过 `context.state` 暴露出来。
+在模块中，Mutation 和 Getter 接收的第一个参数是模块里**局部状态**的对象；对于 Action 局部状态通过 `context.state` 暴露出来。
 
 ```js
 const moduleA = {
@@ -564,7 +564,7 @@ const moduleA = {
     }
     ```
 
-:bulb: 根状态 `rootState` 其实**包含了所有加载的模组的局部状态**（因此模组中可以**「借助」`rootState` 作为中间者**，来访问其他各个注册的模组的局部状态）
+:bulb: 根状态 `rootState` 其实**包含了所有加载的模组的局部状态**（因此模组中可以 **「借助」`rootState` 作为中间者**，来访问其他各个注册的模组的局部状态）
 
 ### 命名空间
 
@@ -637,7 +637,7 @@ modules: {
     namespaced: true, // 开启了命名空间
     getters: {
       // 可以使用 getter 的第三个参数 `rootState` 访问全局状态
-      // 第四个参数 `rootGetters` 访问全局 Getters 
+      // 第四个参数 `rootGetters` 访问全局 Getters
       someGetter (state, getters, rootState, rootGetters) {
         getters.someOtherLocalGetter // -> 'foo/someOtherGetter'
         rootGetters.someOtherGlobalGetter // -> 'someOtherGetter'
@@ -683,7 +683,7 @@ modules: {
 
 #### 辅助函数映射
 
-在组件中，使用 `mapState` 或 `mapActions` 等辅助函数进行映射时，对于开启了命名空间的模块，可以将模块的路径作为第一个参数传递给这些辅助函数，这样所有绑定都会自动将该模块作为上下文，以简化代码
+在组件中，使用 `mapState` 或 `mapActions` 等辅助函数进行映射时，对于开启了命名空间的模块，可以**将模块的路径作为第一个参数**传递给这些辅助函数，这样所有绑定都会自动将该模块作为上下文，以简化代码
 
 ```js
 // 组件
@@ -741,7 +741,7 @@ store.registerModule(['nested', 'myModule'], {
 })
 ```
 
-:bulb: 可以通过 `store.hasModule(moduleName)` 方法检查该模块是否已经被注册到 store，对于嵌套模块，传递 `moduleName` 需要以数组的形式，而不是以路径字符串的形式
+:bulb: 可以通过 `store.hasModule(moduleName)` 方法检查该模块是否已经被注册到 store。对于嵌套模块，传递 `moduleName` 需要以数组的形式，而不是以路径字符串的形式
 
 #### 保留模块状态
 
@@ -749,7 +749,7 @@ store.registerModule(['nested', 'myModule'], {
 
 ```js
 store.registerModule('a', module, {
-    preserveState: true 
+    preserveState: true
 });
 ```
 
