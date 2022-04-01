@@ -7,9 +7,9 @@ tags:
 ---
 
 # prosemirror-state 模块
-该模块生成了编辑器的状态对象 state object，其包括编辑器所包含的内容、选中的内容、注册的插件等。
+该模块主要用于生成编辑器的[状态对象 state](#editorstate-类)，其包括编辑器所包含的内容、[选中的内容](#selection-类)、注册的[插件](#plugin-类)等。
 
-:bulb: state 虽然是一个 JavaScript 对象，但它应该是 immutable 持久化的，即其**不**应该直接修改它，而应该基于原有的状态，（通过 apply transaction 应用事务）生成一个新的状态
+:bulb: state 虽然是一个 JavaScript 对象，但它应该是 immutable 持久化的，即其**不**应该直接修改它，而应该基于原有的状态，（通过 apply [transaction 应用事务](#transaction-类)）生成一个新的状态
 
 ## EditorState 类
 通过实例化 `EditorState` 类可以为编辑器生成一个[状态对象 state](#状态对象)
@@ -196,7 +196,7 @@ const state = new EditorState({});
 * `scrollIntoView` 方法：表示应用该事务后（更新完 state 编辑器状态后），编辑器要将选区滚动到视图窗口中
 
 ## Selection 类
-`Selection` 类是一个 superclass 超类，即它一般不直接实例化，而是要先被继承，构建出各种子类，**通过实例化子类来构建各种类型的选区**，例如 ProseMirror 内置的 `TextSelection` 文本选区子类，`NodeSelection` 节点选区子类，还可以继承这个超类，自定义其他的选区类型。
+`Selection` 类是一个 superclass 超类，即它一般不直接实例化，而是要先被继承，构建出各种子类，**通过实例化子类来构建各种类型的选区**，例如 ProseMirror 内置的 [`TextSelection` 文本选区子类](#textselection-子类)，[`NodeSelection` 节点选区子类](#nodeselection-子类)，还可以继承这个超类，自定义其他的选区类型。
 
 在实例化 `Selection` 类时需要传入一些参数，获取一个选区对象
 
@@ -204,7 +204,7 @@ const state = new EditorState({});
 new Selection($anchor, $head, ranges)
 ```
 
-第一个参数 `$anchor` 是一个 `resolvedPos` 对象，表示选区的锚点（在选区变化时，不移动的一侧，一般是选区的左侧）；第二个参数 `$head` 也是一个 `resolvedPos` 对象，表示选区行进点/动点（在选区变化时，移动的一侧，一般是选区的右侧）；第三个（可选）参数 `ranges` 是一个仅含有一个元素的数组，该元素是一个 `SelectionRange` 对象，如果省略第三个参数，则 ProseMirror 会根据 `$anchor` 和 `$head` 构建出选区范围
+第一个参数 `$anchor` 是一个 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块），表示选区的锚点（在选区变化时，不移动的一侧，一般是选区的左侧）；第二个参数 `$head` 也是一个 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块），表示选区行进点/动点（在选区变化时，移动的一侧，一般是选区的右侧）；第三个（可选）参数 `ranges` 是一个仅含有一个元素的数组，该元素是一个 `SelectionRange` 对象，如果省略第三个参数，则 ProseMirror 会根据 `$anchor` 和 `$head` 构建出选区范围
 
 该类有一些静态方法和属性：
 
@@ -212,13 +212,13 @@ new Selection($anchor, $head, ranges)
 
   :bulb: 该方法是在执行粘贴或其他操作后，不知道应该将光标放到哪个合适的位置时使用的，它会自动寻找一个合适的位置，而不需要用户手动设置光标选区或节点选区。
 
-  第一个参数 `$pos` 是一个 `resolvedPos` 对象，表示从哪个位置开始寻找可用选区；第二个参数 `dir` 是一个数值，用以指示寻找的方向；第三个（可选）参数 `textOnly` 是一个布尔值，表示是否只寻找光标选区。
+  第一个参数 `$pos` 是一个 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块），表示从哪个位置开始寻找可用选区；第二个参数 `dir` 是一个数值，用以指示寻找的方向；第三个（可选）参数 `textOnly` 是一个布尔值，表示是否只寻找光标选区。
 
   其返回值是一个 `selection` 选区对象，如果没有寻找到可用的选区则返回 `null`
 
 * `Selection.near($pos, bias)` 方法：从给定位置 `$pos` 附近寻找一个可用的光标选区或叶子节点选区，默认优先向文本的行进方向（一般是右侧）寻找，如果参数 `bias` 为负值，则优先向文本的行进方的反方向（一般是左侧）寻找。
 
-  第一个参数 `$pos` 是一个 `resolvedPos` 对象，表示从哪个位置开始寻找可用选区；第二个（可选）参数 `bias` 是一个数值，其正负值指示优先寻找的方向。
+  第一个参数 `$pos` 是一个 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块），表示从哪个位置开始寻找可用选区；第二个（可选）参数 `bias` 是一个数值，其正负值指示优先寻找的方向。
 
   其返回值是一个 `selection` 选区对象
 
@@ -248,11 +248,11 @@ new Selection($anchor, $head, ranges)
 
   其返回值是该自定义的选区子类
 
-:package: 以上提到了一些方法中，其所接收的参数涉及一种称为 **`SelectionRange` 类的实例对象**，它表示一个文档中的选区范围，通过 `new SelectionRange($from, $to)` 实例化获取一个选区范围对象，其中入参 `$from` 和 `$to` 都是 `resolvedPos` 对象，分别表示选区范围的下界和上界。该对象具有以下两个属性：
+:package: 以上提到了一些方法中，其所接收的参数涉及一种称为 **`SelectionRange` 类的实例对象**，它表示一个文档中的选区范围，通过 `new SelectionRange($from, $to)` 实例化获取一个选区范围对象，其中入参 `$from` 和 `$to` 都是 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块），分别表示选区范围的下界和上界。该对象具有以下两个属性：
 
-  * `$from` 属性：其值的数据类型是 `resolvedPos` 对象，它表示该选区范围的下界
+  * `$from` 属性：其值的数据类型是 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块），它表示该选区范围的下界
 
-  * `$to` 属性：其值的数据类型是 `resolvedPos` 对象，它表示该选区范围的上界
+  * `$to` 属性：其值的数据类型是 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块），它表示该选区范围的上界
 
 ### 选区对象
 选区对象 selection 包含多个字段/属性：
@@ -263,11 +263,11 @@ new Selection($anchor, $head, ranges)
 
 * `$anchor` 属性：该选区的锚点，即当选区变化时，不移动的一侧
 
-  属性值的数据类型是 `resolvedPos` 对象
+  属性值的数据类型是 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块）
 
 * `$head` 属性：该选区的动点，即当选区变化时，移动的一侧
 
-  属性值的数据类型是 `resolvedPos` 对象
+  属性值的数据类型是 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块）
 
 * `anchor` 属性：该选区的锚点的位置
 
@@ -279,11 +279,11 @@ new Selection($anchor, $head, ranges)
 
 * `$from` 属性：该选区的下界（一般是左侧）
 
-  属性值的数据类型是 `resolvedPos` 对象
+  属性值的数据类型是 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块）
 
 * `$to` 属性：该选区的上界（一般是右侧）
 
-  属性值的数据类型是 `resolvedPos` 对象
+  属性值的数据类型是 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块）
 
 * `from` 属性：该选区所覆盖范围的下界的位置
 
@@ -346,7 +346,7 @@ new Selection($anchor, $head, ranges)
 ### TextSelection 子类
 ProMirror 内置的选区子类 `TextSelection` 文本选区，即该选区需要在 textblock 节点中
 
-通过 `new TextSelection($anchor, $head)` 实例化。其中第一个参数 `$anchor` 表示锚点，它是一个 `resolvedPos` 对象；第二个（可选）参数 `$head` 表示动点，它也是一个 `resolvedPos` 对象，如果 `$head` 省略或与 `$anchor` 相同，则该文本选区就只表示一个常见的光标位置。
+通过 `new TextSelection($anchor, $head)` 实例化。其中第一个参数 `$anchor` 表示锚点，它是一个 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块）；第二个（可选）参数 `$head` 表示动点，它也是一个 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块），如果 `$head` 省略或与 `$anchor` 相同，则该文本选区就只表示一个常见的光标位置。
 
 该子类除了（通过原型继承）继承 `Selection` 超类的静态属性和方法，此外还具有一些该子类特有的静态方法和属性：
 
@@ -364,9 +364,9 @@ ProMirror 内置的选区子类 `TextSelection` 文本选区，即该选区需�
 
 该类的实例 `textSelection` 是一个文本选区对象，除了继承 `Selection` 超类的一些属性和方法，还具有一个该子类特有的属性
 
-* `$cursor` 属性：如果该文本选区是一个空的选区（无内容）则返回一个 `resolvePos` 对象表示光标的位置相关信息；否则返回 `null`
+* `$cursor` 属性：如果该文本选区是一个空的选区（无内容）则返回一个 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块）表示光标的位置相关信息；否则返回 `null`
 
-   其返回值是一个 `resolvePos` 对象或 `null`
+   其返回值是一个 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块）或 `null`
 
 ### NodeSelection 子类
 ProseMirror 内置的选区子类 `NodeSelection` 节点选区，即该选区需要选中单一的一个 `node` 节点。
@@ -375,7 +375,7 @@ ProseMirror 内置的选区子类 `NodeSelection` 节点选区，即该选区需
 
 :bulb: 所有在数据类型约束 schema 中将 `selectable` 属性设置为 `true` 的节点，都可以被选中
 
-通过 `new NodeSelection($pos)` 实例化创建一个节点选区。参数 `$pos` 是一个 `resolvedPos` 对象，会基于在该位置的节点创建一个选区 :warning: 但不能保证入参 `$pos` 所指示的位置就包含一个节点。
+通过 `new NodeSelection($pos)` 实例化创建一个节点选区。参数 `$pos` 是一个 `resolvedPos` 对象（:package: 具体可以参考 prosemirror-model 模块），会基于在该位置的节点创建一个选区 :warning: 但不能保证入参 `$pos` 所指示的位置就包含一个节点。
 
 该子类除了（通过原型继承）继承 `Selection` 超类的静态属性和方法，此外还具有一些该子类特有的静态方法和属性：
 
