@@ -92,7 +92,7 @@ const state = new EditorState({});
 :bulb: 还可以通过注册插件 plugin 来新增状态对象 state 的字段/属性
 
 ## Transaction 类
-`Transaction` 类继承自 `Transform` 类，它的实例 transaction 称为事务，可以理解为操作编辑器文本内容的多个步骤的一个合集（也包括编辑器的选中内容的变化，或是样式标记的变化）。
+`Transaction` 类继承自 `Transform` 类（实例化方式可以参考 :package: prosemirror-transform 模块），它的实例 transaction 称为事务，可以理解为操作编辑器文本内容的多个步骤的一个合集（也包括编辑器的选中内容的变化，或是样式标记的变化）。
 
 可以通过调用状态对象的方法 `state.apply(transaction)` 来将事务 transaction 应用当前的编辑器的状态中，以生成一个新的状态。
 
